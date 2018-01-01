@@ -1,17 +1,4 @@
 #!/bin/sh
-
-export port=1194
-export protocol=udp
-export owner="junhz3721@gmail.com"
-export client="junhz3721@aliyun.com"
-export smtp="smtp.gmail.com:587"
-export password="tooBad@37211414"
-# use git clone?
-wget --no-check-certificate https://raw.githubusercontent.com/junhz/openvpn-vm/master/go-vpn.sh
-chmod +x go-vpn.sh
-./go-vpn.sh
-
-#!/bin/sh
 apt-get update
 apt-get --assume-yes install openvpn
 apt-get --assume-yes install easy-rsa
