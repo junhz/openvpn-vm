@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 apt-get update
 apt-get --assume-yes install openvpn
 apt-get --assume-yes install easy-rsa
