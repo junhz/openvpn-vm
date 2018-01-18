@@ -15,6 +15,7 @@ export KEY_EMAIL="$owner"
 cd keys
 mv *.pem *.crt *.csr *.key /etc/openvpn
 cd /etc/openvpn
+openvpn --genkey --secret static.key
 wget --no-check-certificate https://raw.githubusercontent.com/junhz/openvpn-vm/master/server.conf
 echo "" >> server.conf
 echo "proto $protocol" >> server.conf
