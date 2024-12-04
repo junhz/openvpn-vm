@@ -1,16 +1,12 @@
 #!/bin/bash
 apt-get update
-apt-get --assume-yes install openvpn
-apt-get --assume-yes install easy-rsa
-apt-get --assume-yes install heirloom-mailx
+apt-get install -y openvpn easy-rsa heirloom-mailx
 cd /usr/share/easy-rsa/
 export KEY_EMAIL="$owner"
 ./easyrsa build-ca
 ./easyrsa build-server-full server nopass
 ./easyrsa gen-dh
 ./easyrsa build-client-full client nopass
-cd keys
-mv *.pem *.crt *.csr *.key /etc/openvpn
 cd /etc/openvpn
 wget --no-check-certificate https://raw.githubusercontent.com/junhz/openvpn-vm/master/server.conf
 echo "" >> server.conf
@@ -22,13 +18,13 @@ echo "proto $protocol" >> client.ovpn
 cat /etc/resolv.conf | grep "^nameserver" | sed "s/nameserver/dhcp-option DNS/" >> client.ovpn
 echo "remote $(dig +short myip.opendns.com @resolver1.opendns.com) $port" >> client.ovpn
 echo "<ca>" >> client.ovpn
-cat ca.crt | grep -A 100 "BEGIN CERTIFICATE" | grep -B 100 "END CERTIFICATE" >> client.ovpn
+cat /usr/share/easy-rsa/pki/ca.crt | grep -A 100 "BEGIN CERTIFICATE" | grep -B 100 "END CERTIFICATE" >> client.ovpn
 echo "</ca>" >> client.ovpn
 echo "<cert>" >> client.ovpn
-cat client.crt | grep -A 100 "BEGIN CERTIFICATE" | grep -B 100 "END CERTIFICATE" >> client.ovpn
+cat /usr/share/easy-rsa/pki/issued/client.crt | grep -A 100 "BEGIN CERTIFICATE" | grep -B 100 "END CERTIFICATE" >> client.ovpn
 echo "</cert>" >> client.ovpn
 echo "<key>" >> client.ovpn
-cat client.key | grep -A 100 "BEGIN PRIVATE KEY" | grep -B 100 "END PRIVATE KEY" >> client.ovpn
+cat /usr/share/easy-rsa/pki/private/client.key | grep -A 100 "BEGIN PRIVATE KEY" | grep -B 100 "END PRIVATE KEY" >> client.ovpn
 echo "</key>" >> client.ovpn
 echo 1 > /proc/sys/net/ipv4/ip_forward
 echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
