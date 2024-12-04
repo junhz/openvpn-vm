@@ -4,15 +4,11 @@ apt-get --assume-yes install openvpn
 apt-get --assume-yes install easy-rsa
 apt-get --assume-yes install heirloom-mailx
 cd /usr/share/easy-rsa/
-mkdir keys
-touch keys/index.txt
-echo 01 > keys/serial
-source vars
 export KEY_EMAIL="$owner"
-./pkitool --initca
-./pkitool --server server
-./build-dh
-./pkitool client
+./easyrsa build-ca
+./easyrsa build-server-full server nopass
+./easyrsa gen-dh
+./easyrsa build-client-full client nopass
 cd keys
 mv *.pem *.crt *.csr *.key /etc/openvpn
 cd /etc/openvpn
